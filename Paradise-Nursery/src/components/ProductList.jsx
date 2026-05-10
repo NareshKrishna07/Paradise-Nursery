@@ -1,4 +1,10 @@
+import { useState } from "react";
+
 const ProductList = () => {
+
+  const [cartCount, setCartCount] = useState(0);
+
+  const [addedItems, setAddedItems] = useState([]);
 
   const plants = [
 
@@ -6,70 +12,177 @@ const ProductList = () => {
       id: 1,
       name: "Snake Plant",
       price: 10,
-      category: "Indoor"
+      category: "Indoor Plants",
+      image: "https://via.placeholder.com/150"
     },
 
     {
       id: 2,
-      name: "Aloe Vera",
+      name: "Spider Plant",
       price: 15,
-      category: "Succulent"
+      category: "Indoor Plants",
+      image: "https://via.placeholder.com/150"
     },
 
     {
       id: 3,
-      name: "Peace Lily",
+      name: "Aloe Vera",
       price: 20,
-      category: "Air Purifying"
+      category: "Succulents",
+      image: "https://via.placeholder.com/150"
     },
 
     {
       id: 4,
-      name: "Spider Plant",
-      price: 18,
-      category: "Indoor"
+      name: "Cactus",
+      price: 12,
+      category: "Succulents",
+      image: "https://via.placeholder.com/150"
     },
 
     {
       id: 5,
-      name: "Cactus",
-      price: 12,
-      category: "Succulent"
+      name: "Peace Lily",
+      price: 18,
+      category: "Air Purifying Plants",
+      image: "https://via.placeholder.com/150"
     },
 
     {
       id: 6,
       name: "Money Plant",
-      price: 22,
-      category: "Air Purifying"
+      price: 25,
+      category: "Air Purifying Plants",
+      image: "https://via.placeholder.com/150"
     }
   ];
+
+  const categories = [
+    "Indoor Plants",
+    "Succulents",
+    "Air Purifying Plants"
+  ];
+
+  const handleAddToCart = (plantId) => {
+
+    setAddedItems([...addedItems, plantId]);
+
+    setCartCount(cartCount + 1);
+  };
 
   return (
     <div>
 
-      <nav>
+      <nav
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "20px",
+          backgroundColor: "green",
+          color: "white"
+        }}
+      >
+
         <h2>Paradise Nursery</h2>
 
-        <a href="/">Home</a> | 
-        <a href="/plants">Plants</a> | 
-        <a href="/cart">Cart 🛒</a>
+        <div>
+
+          <a
+            href="/"
+            style={{ color: "white", marginRight: "15px" }}
+          >
+            Home
+          </a>
+
+          <a
+            href="/plants"
+            style={{ color: "white", marginRight: "15px" }}
+          >
+            Plants
+          </a>
+
+          <a
+            href="/cart"
+            style={{ color: "white" }}
+          >
+            Cart 🛒 ({cartCount})
+          </a>
+
+        </div>
+
       </nav>
 
-      <h1>Plants</h1>
+      <h1 style={{ textAlign: "center" }}>
+        Our Plants
+      </h1>
 
       {
-        plants.map((plant) => (
+        categories.map((category) => (
 
-          <div key={plant.id}>
+          <div key={category}>
 
-            <h3>{plant.name}</h3>
+            <h2>{category}</h2>
 
-            <p>{plant.category}</p>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                flexWrap: "wrap"
+              }}
+            >
 
-            <p>${plant.price}</p>
+              {
+                plants
+                  .filter(
+                    plant => plant.category === category
+                  )
 
-            <button>Add to Cart</button>
+                  .map((plant) => (
+
+                    <div
+                      key={plant.id}
+
+                      style={{
+                        border: "1px solid gray",
+                        padding: "15px",
+                        width: "200px"
+                      }}
+                    >
+
+                      <img
+                        src={plant.image}
+                        alt={plant.name}
+                        width="150"
+                      />
+
+                      <h3>{plant.name}</h3>
+
+                      <p>${plant.price}</p>
+
+                      <button
+
+                        onClick={() =>
+                          handleAddToCart(plant.id)
+                        }
+
+                        disabled={
+                          addedItems.includes(plant.id)
+                        }
+                      >
+
+                        {
+                          addedItems.includes(plant.id)
+                            ? "Added"
+                            : "Add to Cart"
+                        }
+
+                      </button>
+
+                    </div>
+                  ))
+              }
+
+            </div>
 
           </div>
         ))
